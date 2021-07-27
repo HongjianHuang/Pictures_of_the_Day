@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { createClient } from "pexels";
+import { useEffect, useState } from "react";
+import Pictures from "./Pictures";
 
 function App() {
+  const client = createClient(
+    "563492ad6f9170000100000178d40363ce3e48cd89ba174e3b84b593"
+  );
+  const [picArray, setPicArray] = useState([]);
+  const [state, setState] = useState(0);
+  const tempArray = [];
+  useEffect(() => {
+    client.photos.random().then((picObject) => {
+      tempArray.push(picObject);
+      setPicArray(tempArray);
+    });
+  }, [state]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>HI!</h1>
+      <button
+        onClick={() => {
+          setState(state + 1);
+          console.log(picArray);
+        }}
+      >
+        HI!
+      </button>
+      <main>
+        <img src={picArray[0].src.small} />
+      </main>
     </div>
   );
 }
