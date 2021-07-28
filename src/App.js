@@ -1,34 +1,67 @@
 import "./App.css";
-import { createClient } from "pexels";
 import { useEffect, useState } from "react";
 import Pictures from "./Pictures";
+import axios from "axios";
 
 function App() {
-  const client = createClient(
-    "563492ad6f9170000100000178d40363ce3e48cd89ba174e3b84b593"
-  );
   const [picArray, setPicArray] = useState([]);
   const [state, setState] = useState(0);
-  const tempArray = [];
   useEffect(() => {
-    client.photos.random().then((picObject) => {
-      tempArray.push(picObject);
+    axios({
+      url: "https://api.unsplash.com/photos/random",
+      method: "GET",
+      dataResponse: "json",
+      params: {
+        client_id: "0YJ_dWspPBeJNIsAljMricp6jhRxIo3SEW-DEsKewJQ",
+        count: 10,
+      },
+    }).then((response) => {
+      console.log(response.data);
+      setPicArray(response.data);
+    });
+  }, []);
+  //console.log(picArray);
+
+  const getAnotherPicture = (picture) => {
+    const isSamePic = (element) => element === picture;
+    axios({
+      url: "https://api.unsplash.com/photos/random",
+      method: "GET",
+      dataResponse: "json",
+      params: {
+        client_id: "0YJ_dWspPBeJNIsAljMricp6jhRxIo3SEW-DEsKewJQ",
+        count: 1,
+      },
+    }).then((response) => {
+      let tempArray = [...picArray];
+      if (picArray.findIndex(isSamePic) !== -1) {
+        tempArray[picArray.findIndex(isSamePic)] = response.data[0];
+      }
+      console.log(tempArray);
       setPicArray(tempArray);
     });
-  }, [state]);
+  };
   return (
     <div className="App">
       <h1>HI!</h1>
       <button
         onClick={() => {
-          setState(state + 1);
+          //setState(state + 1);
           console.log(picArray);
         }}
       >
         HI!
       </button>
       <main>
-        <img src={picArray[0].src.small} />
+        {picArray.map((picture) => {
+          return (
+            <Pictures
+              clickFunction={() => getAnotherPicture(picture)}
+              picture={picture}
+              key={picture.id}
+            />
+          );
+        })}
       </main>
     </div>
   );
