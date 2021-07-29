@@ -5,7 +5,59 @@ import axios from "axios";
 
 function App() {
   const [picArray, setPicArray] = useState([]);
-  const [state, setState] = useState(0);
+  const [picIndex, setPicIndex] = useState(0);
+  const [newPicArray, setNewPicArray] = useState([]);
+  const [overPicLimit, setOverPicLimit] = useState(false);
+  const [layout, setLayout] = useState([]);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const randomWidth = () => {
+    const randomInt = Math.floor(Math.random() * 3) + 1;
+    if (randomInt === 3) {
+      return "width3";
+    } else if (randomInt === 2) {
+      return "width2";
+    } else {
+      return "width1";
+    }
+  };
+  const randomHeight = () => {
+    const randomInt = Math.floor(Math.random() * 3) + 1;
+    if (randomInt === 3) {
+      return "height3";
+    } else if (randomInt === 2) {
+      return "height2";
+    } else {
+      return "height1";
+    }
+  };
+  useEffect(() => {
+    const layoutArray = [];
+    console.log();
+    for (let i = 0; i < 10; i++) {
+      layoutArray.push({ width: randomWidth(), height: randomHeight() });
+    }
+    console.log(layoutArray);
+    setLayout(layoutArray);
+  }, []);
+  useEffect(() => {
+    axios({
+      url: "https://api.unsplash.com/photos/random",
+      method: "GET",
+      dataResponse: "json",
+      params: {
+        client_id: "6Wy8r32NE-IcXH01MKGdV7Zqtviw8_SjCQjmNIrVCm8",
+        count: 10,
+      },
+    })
+      .then((response) => {
+        setPicArray(response.data);
+      })
+      .then(() => {
+        setHasLoaded(true);
+      });
+  }, []);
+
+  //console.log(picArray);
   useEffect(() => {
     axios({
       url: "https://api.unsplash.com/photos/random",
@@ -13,58 +65,44 @@ function App() {
       dataResponse: "json",
       params: {
         client_id: "0YJ_dWspPBeJNIsAljMricp6jhRxIo3SEW-DEsKewJQ",
-        count: 10,
+        count: 30,
       },
     }).then((response) => {
-      console.log(response.data);
-      setPicArray(response.data);
+      setNewPicArray(response.data);
     });
-  }, []);
-  //console.log(picArray);
-
+  }, [overPicLimit]);
   const getAnotherPicture = (picture) => {
+    const tempArray = [...picArray];
     const isSamePic = (element) => element === picture;
-    axios({
-      url: "https://api.unsplash.com/photos/random",
-      method: "GET",
-      dataResponse: "json",
-      params: {
-        client_id: "0YJ_dWspPBeJNIsAljMricp6jhRxIo3SEW-DEsKewJQ",
-        count: 1,
-      },
-    }).then((response) => {
-      let tempArray = [...picArray];
-      if (picArray.findIndex(isSamePic) !== -1) {
-        tempArray[picArray.findIndex(isSamePic)] = response.data[0];
-      }
-      console.log(tempArray);
-      setPicArray(tempArray);
-    });
+    if (picIndex >= newPicArray.length) {
+      setOverPicLimit(!overPicLimit);
+      setPicIndex(0);
+    } else {
+      tempArray[picArray.findIndex(isSamePic)] = newPicArray[picIndex];
+      setPicIndex(picIndex + 1);
+    }
+    setPicArray(tempArray);
   };
-  return (
-    <div className="App">
-      <h1>HI!</h1>
-      <button
-        onClick={() => {
-          //setState(state + 1);
-          console.log(picArray);
-        }}
-      >
-        HI!
-      </button>
-      <main>
-        {picArray.map((picture) => {
+
+  if (hasLoaded === true && layout.length > 0) {
+    return (
+      <div className="App">
+        {picArray.map((picture, i) => {
           return (
             <Pictures
+              width={layout[i].width}
+              height={layout[i].height}
               clickFunction={() => getAnotherPicture(picture)}
               picture={picture}
               key={picture.id}
             />
           );
         })}
-      </main>
-    </div>
-  );
+      </div>
+    );
+  } else {
+    return <div className="App"></div>;
+  }
 }
 
 export default App;
