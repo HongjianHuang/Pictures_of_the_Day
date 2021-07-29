@@ -1,11 +1,14 @@
+# References
+CSS Grid Responsive Image Gallery Tutorial[Link](https://www.youtube.com/watch?v=gvPyJ0rc944)
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
-In the project directory, you can run:
 
+
+In the project directory, you can run:
 ### `npm start`
 
 Runs the app in the development mode.\
@@ -68,3 +71,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
