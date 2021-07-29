@@ -1,5 +1,5 @@
 # References
-CSS Grid Responsive Image Gallery Tutorial[Link](https://www.youtube.com/watch?v=gvPyJ0rc944)
+CSS Grid Responsive Image Gallery Tutorial: [Link](https://www.youtube.com/watch?v=gvPyJ0rc944)
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
